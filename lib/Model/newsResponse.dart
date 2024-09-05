@@ -49,7 +49,7 @@ class News {
       this.url,
       this.urlToImage,
       this.publishedAt,
-      this.content});
+      this.content,});
 
   News.fromJson(Map<String, dynamic> json) {
     source =

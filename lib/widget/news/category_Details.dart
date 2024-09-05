@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/constants/AppColor.dart';
 import 'package:news_app/screens/viewModel/CategoryViewModel.dart';
+import 'package:news_app/screens/viewModel/newsViewModel.dart';
 import 'package:news_app/widget/news/NewsTabs.dart';
 import 'package:provider/provider.dart';
 
@@ -51,8 +52,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
               ),
             );
           } else {
-            return NewsTabs(
-              sourcesList: viewModel.listSources!,
+            return ChangeNotifierProvider(
+              create: (context) => NewsViewModel(),
+              child: NewsTabs(
+                sourcesList: viewModel.listSources!,
+              ),
             );
           }
         },

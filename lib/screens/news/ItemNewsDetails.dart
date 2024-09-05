@@ -94,7 +94,7 @@ class ItemNewsDetails extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            launchUrl(Uri.https(args.news.url!));
+                            launchUrl(Uri.parse(args.news.url!));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),

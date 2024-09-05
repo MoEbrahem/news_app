@@ -27,7 +27,7 @@ class WebServices {
       throw e;
     }
   }
-  static Future<NewsResponse?> getMySourceId(String sourceId,[String page='1']) async {
+  static Future<NewsResponse?> getNewsByMySourceId(String sourceId,[String page='1']) async {
     Uri url = Uri.https(
       ApiConstants.baseurl,
       ApiConstants.newsApi,

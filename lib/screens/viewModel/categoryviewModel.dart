@@ -18,7 +18,6 @@ class CategoryViewModel extends ChangeNotifier {
         errMessage = resonse!.message;
       }
     } catch (e) {
-      print("Here is a Problem===========================");
       errMessage = e.toString();
     }
     notifyListeners();
