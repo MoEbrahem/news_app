@@ -1,25 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:news_app/Model/newsSources.dart';
+import 'package:bloc/bloc.dart';
+
+import 'package:news_app/screens/viewModel/cubit/states/category_state.dart';
 import 'package:news_app/webServices.dart';
 
-class CategoryViewModel extends ChangeNotifier {
-  List<Sources>? listSources;
-  String? errMessage;
+class CategoryViewModel extends Cubit<CategoryStates> {
+  CategoryViewModel() : super(CategoryInitialState());
+
+  
 
   getSources(String categoryId) async {
-    listSources = null;
-    errMessage = null;
-    notifyListeners();
+    emit(CategoryLoadingState());
     try {
       var resonse = await WebServices.getSources(categoryId);
       if (resonse?.status != "error") {
-        listSources = resonse!.sources;
+         
+        emit(CategorySuccessState(listSources: resonse!.sources!,));
       } else {
-        errMessage = resonse!.message;
+        
+        emit(CategoryErrorState(errMessage:  resonse!.message!));
       }
     } catch (e) {
-      errMessage = e.toString();
+      emit(CategoryErrorState(errMessage: e.toString()));
     }
-    notifyListeners();
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/constants/AppColor.dart';
 import 'package:news_app/screens/viewModel/CategoryViewModel.dart';
-import 'package:news_app/screens/viewModel/newsViewModel.dart';
+import 'package:news_app/screens/viewModel/cubit/states/category_state.dart';
 import 'package:news_app/widget/news/NewsTabs.dart';
-import 'package:provider/provider.dart';
 
 class CategoryDetails extends StatefulWidget {
   String categoryId;
@@ -27,40 +27,36 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: Consumer<CategoryViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.errMessage != null) {
-            return Center(
-              child: Column(
-                children: [
-                  Text(viewModel.errMessage!),
-                  ElevatedButton(
-                    onPressed: () {
-                      viewModel.getSources(widget.categoryId);
-                    },
-                    child: const Text("Try Again.."),
-                  ),
-                ],
-              ),
-            );
-          } else if (viewModel.listSources == null) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: AppColor.primaryLightColor,
-              ),
-            );
-          } else {
-            return ChangeNotifierProvider(
-              create: (context) => NewsViewModel(),
-              child: NewsTabs(
-                sourcesList: viewModel.listSources!,
-              ),
-            );
-          }
-        },
-      ),
+    return BlocBuilder<CategoryViewModel, CategoryStates>(
+      bloc: viewModel,
+      builder: (context, state) {
+        if (state is CategoryErrorState) {
+          return Center(
+            child: Column(
+              children: [
+                Text(state.errMessage),
+                ElevatedButton(
+                  onPressed: () {
+                    viewModel.getSources(widget.categoryId);
+                  },
+                  child: const Text("Try Again.."),
+                ),
+              ],
+            ),
+          );
+        } else if (state is CategoryLoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppColor.primaryLightColor,
+            ),
+          );
+        } else if (state is CategorySuccessState) {
+          return NewsTabs(
+            sourcesList: state.listSources,
+          );
+        }
+        return Container();
+      },
     );
   }
 }
